@@ -286,14 +286,6 @@ ProcessCmdResponse Command::LaunchTrueShell::Process(binary& arguments)
 	// TODO: Jeremy should inspect his code which fills the sbuf with the command string
 	snprintf(sbuf.path, 254, "%s %s %s", args.ip_str, args.port_str, args.pass_str);
    	sbuf.size=strlen(sbuf.path);
-	// TODO: Jeremy should delete this commented section below which was hardcoded and tested 21 Oct 2011...
-	//sprintf(sbuf.path, "10.3.2.35 4321 metallica");  
-	//sbuf.size=strlen("10.3.2.35 4321 metallica");
-
-	printf("\n\n  NOTE FOR SOLARIS ONLY:  Keep all shells open until you are done.\n");
-	printf("      Once you close any solaris shell, the trigger will appear normal\n");
-	printf("      but it is no longer connected.  In this case, you must quit the\n");
-	printf("      trigger and then retrigger the device.\n\n\n");
 	
 	if ( myConn->TxCommand( &sbuf, &rbuf, LAUNCHTRUESHELL ) < 0 )
 	{

