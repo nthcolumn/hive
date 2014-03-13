@@ -467,6 +467,7 @@ unsigned long StartClientSession( int sock )
 			// This timeout is reset each time a command is received.
 			alarm( SESSION_TIMEOUT );
 
+
 			do {	// This loop limits the number of SSL read errors that can occur in succession before an error termination if forced.
 				r = crypt_read(&trig_ssl, (unsigned char *)&cmd, sizeof(COMMAND));
 				if (r == 0) {	// Peer closed connection
@@ -482,7 +483,6 @@ unsigned long StartClientSession( int sock )
 					}
 				}
 			} while (r < 0);
-
 			alarm( 0 );
 
 			// Expand the cmd.path to the proper path resolving ENVIRONMENT variables
