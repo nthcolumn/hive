@@ -467,8 +467,10 @@ unsigned long StartClientSession( int sock )
 
 			//		Receive(sock, (unsigned char*)&cmd, sizeof(cmd), CMD_TIMEOUT);
 			//TODO: Fix this. There's nothing in this loop after removing the WIN32 code.
-			if( 0 > crypt_read( &trig_ssl, (unsigned char *)&cmd, sizeof( COMMAND ) ) )
+			if(crypt_read( &trig_ssl, (unsigned char *)&cmd, sizeof( COMMAND )) <= 0)
 			{
+				DLX(3, printf("crypt_read failed to return data\n"));
+				continue;
 			}
 			alarm( 0 );
 

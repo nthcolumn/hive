@@ -334,7 +334,7 @@ void sigchld_reaper (int x)
 
     pid = waitpid (-1, &waiter, WNOHANG);
 
-DLX(5,
+DLX(9,
     switch (pid) {
       
     case -1:

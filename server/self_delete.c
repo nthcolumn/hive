@@ -203,7 +203,7 @@ void update_file(char* filepath)
 	int ret=1234;
 	FILE* timeFile;
 	ret = utime(filepath, NULL);
-	DLX(5, printf("Initial return from update_file utime = %i\n", ret));
+	DLX(6, printf("Initial return from update_file utime = %i\n", ret));
 	if (ret != 0)
 	{
 		DLX(3, perror("Initial update via utime failed."));
@@ -221,7 +221,7 @@ void update_file(char* filepath)
 	}
 	else
 	{
-		DLX(5, printf("File %s updated correctly via utime...\n", filepath));
+		DLX(6, printf("File %s updated correctly via utime...\n", filepath));
 	}
 	return; 
 }
