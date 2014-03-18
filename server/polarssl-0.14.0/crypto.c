@@ -57,34 +57,28 @@ extern "C" {
 	}
 
 //*******************************************************
+	/*!
+	 * crypt_read(ssl_context * ssl, unsigned char *buf, int bufsize)
+	 * @param ssl
+	 * @param buf
+	 * @param bufsize
+	 * @return Characters read, 0 if peer closed, or < 0 for error
+	 */
 	int crypt_read(ssl_context * ssl, unsigned char *buf, int bufsize) {
 		int ret;
 
-		// TODO: look at this do/while loop again.  it only runs once.
-		// does it serve any other purpose?
-		do {
-			memset(buf, 0, bufsize);
+		memset(buf, 0, bufsize);
 
-			ret = ssl_read(ssl, buf, bufsize);
+		ret = ssl_read(ssl, buf, bufsize);
 
-			if (ret == POLARSSL_ERR_NET_TRY_AGAIN) {
-				DLX(5, printf("ERROR: ssl_read() returned POLARSSL_ERR_NET_TRY_AGAIN, retrying...\n"));
-				continue;
-			}
-
-			if (ret == POLARSSL_ERR_SSL_PEER_CLOSE_NOTIFY) {
-				DLX(5, printf("ERROR: ssl_read() returned POLARSSL_ERR_SSL_PEER_CLOSE_NOTIFY\n"));
-				break;
-			}
-
-			if (ret <= 0) {
-				DLX(5, printf("ERROR: ssl_read() failed with error: %d\n", ret));
-				break;
-			}
-
+		if (ret & POLARSSL_ERR_SSL_PEER_CLOSE_NOTIFY) {
+			DLX(5, printf("ssl_read(): peer closed connection\n"));
+			ret = 0;
+		} else if (ret < 0) {
+			DLX(5, printf("ERROR: ssl_read() failed with error: %d\n", ret));
+		} else {
 			DLX(5, printf("ssl_read(): %d bytes read\n", ret));
 		}
-		while (0);
 
 		return ret;
 	}
