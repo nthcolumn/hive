@@ -7,11 +7,9 @@
 #include "compat.h"
 #include "function_strings.h"
 
-#define	CONNECT_TIMEOUT	60 * 5 //connect timeout = 60 seconds * 5 minutes
-#define SESSION_TIMEOUT 60 * 60 * 1		// session timeout = 60 seconds * 60 minutes * 1 hours
-// for testing
-//#define SESSION_TIMEOUT 30
-
+#define	CONNECT_TIMEOUT		60 * 5		//connect timeout = 60 seconds * 5 minutes
+#define SESSION_TIMEOUT 	60 * 60 * 1	// session timeout = 60 seconds * 60 minutes * 1 hours
+#define SSL_READ_ERROR_LIMIT	5		// SSL read error limit -- retry read 5 times before exiting
 
 /*!
  * @struct COMMAND

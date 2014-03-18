@@ -436,7 +436,7 @@ unsigned long StartClientSession( int sock )
 	if ( crypt_setup_client( &trig_hs, &trig_ssl, &trig_ssn, &sock ) != SUCCESS )
 	{
 		DLX(2, printf("ERROR: crypt_setup_client()\n"));
-			crypt_cleanup( &trig_ssl);
+		crypt_cleanup( &trig_ssl);
 		return FAILURE; //TODO: SHOULD THESE BE GOING TO EXIT AT BOTTOM???
 	}
 
@@ -445,7 +445,7 @@ unsigned long StartClientSession( int sock )
 	if ( crypt_handshake(&trig_ssl) != SUCCESS )
 	{
 		DLX(2, printf("ERROR: TLS connection with TLS server failed to initialize.\n"));
-			crypt_cleanup( &trig_ssl);
+		crypt_cleanup( &trig_ssl);
 		return FAILURE; //TODO: SHOULD THESE BE GOING TO EXIT AT BOTTOM???
 	}
 	DLX(3, printf("TLS handshake complete.\n"));
@@ -455,23 +455,34 @@ unsigned long StartClientSession( int sock )
 		{
 			COMMAND cmd;
 			REPLY ret;
+			int r;
+			short read_error_count = 0;
 
 			// Fill reply buffer with random bytes
 			GenRandomBytes((unsigned char *)&ret, sizeof(REPLY));
 
 			// Get command struct. Willing to wait 5 minutes between commands
 
-			// set timeout.  if we don't receive a command within this timeframe, assume we are hung and exit
-			// this timeout is reset each time a command is received.
+			// Set timeout.  If we don't receive a command within this time frame, assume we are hung and exit.
+			// This timeout is reset each time a command is received.
 			alarm( SESSION_TIMEOUT );
 
-			//		Receive(sock, (unsigned char*)&cmd, sizeof(cmd), CMD_TIMEOUT);
-			//TODO: Fix this. There's nothing in this loop after removing the WIN32 code.
-			if(crypt_read( &trig_ssl, (unsigned char *)&cmd, sizeof( COMMAND )) <= 0)
-			{
-				DLX(3, printf("crypt_read failed to return data\n"));
-				continue;
-			}
+			do {	// This loop limits the number of SSL read errors that can occur in succession before an error termination if forced.
+				r = crypt_read(&trig_ssl, (unsigned char *)&cmd, sizeof(COMMAND));
+				if (r == 0) {	// Peer closed connection
+					DLX(3, printf("crypt_read: peer closed connection\n"));
+					goto Exit;
+				}
+				if (r < 0) {	// Read error
+					DLX(3, printf("crypt_read error: %0x\n", r));
+					read_error_count++;
+					if (read_error_count > SSL_READ_ERROR_LIMIT) {
+						DLX(3, printf("crypt_read error limit exceeded\n"));
+						goto Exit;
+					}
+				}
+			} while (r < 0);
+
 			alarm( 0 );
 
 			// Expand the cmd.path to the proper path resolving ENVIRONMENT variables
@@ -572,9 +583,7 @@ Exit:
 
 int Execute( char *path )
 {
-	//Assume success...
-	int rv;
-	int status=0; 
+	int status=0; 	//Assume success...
 	pid_t pid;
 	char* receivedCommand;
 
@@ -606,9 +615,9 @@ int Execute( char *path )
 		status = -1;
 	}
 	else
-	{
-		//This is the parent process, Wait for the child to complete.
-		rv = waitpid( pid, &status, 0);
+	{	//This is the parent process, Wait for the child to complete.
+		D(int rv;)
+		D(rv =) waitpid( pid, &status, 0);
 		DLX(2, printf("waitpid() returned %d while waiting for pid %d\n", rv, (int)pid));
 		if (WIFEXITED(status))
 		{
