@@ -4,8 +4,36 @@
 # To compile on MinGW: add "-lws2_32" to LDFLAGS or define WINDOWS in your
 # environment
 #
-CFLAGS	+= -I../include -D_FILE_OFFSET_BITS=64 -Wall -W -Wdeclaration-after-statement
+CFLAGS	= -I../include -Wall -W -Wdeclaration-after-statement
 OFLAGS	= -O2
+
+ifeq ("$(TARGET)", "linux-x86")
+	include ../../Makefile-include.linux-x86
+endif
+ifeq ("$(TARGET)", "linux-x86_64")
+	include ../../Makefile-include.linux-x86_64
+endif
+ifeq ("$(TARGET)", "mikrotik-mips")
+	include ../../Makefile-include.mikrotik-mips
+endif
+ifeq ("$(TARGET)", "mikrotik-mipsel")
+	include ../../Makefile-include.mikrotik-mipsel
+endif
+ifeq ("$(TARGET)", "mikrotik-x86")
+	include ../../Makefile-include.mikrotik-x86
+endif
+ifeq ("$(TARGET)", "mikrotik-ppc")
+	include ../../Makefile-include.mikrotik-ppc
+endif
+ifeq ("$(TARGET)", "arm")
+	include ../../Makefile-include.arm
+endif
+ifeq ("$(TARGET)", "solaris-sparc")
+	include ../../Makefile-include.solaris-sparc
+endif
+ifeq ("$(TARGET)", "solaris-x86")
+	include ../../Makefile-include.solaris-x86
+endif
 
 ifdef DEBUG
 CFLAGS += -g3
@@ -34,31 +62,31 @@ DLEXT=dll
 LDFLAGS += -lws2_32
 endif
 
-OBJS=	aes.o		aesni.o		arc4.o			\
-		asn1parse.o								\
+OBJS=		aes.o		aesni.o		arc4.o		\
+		asn1parse.o					\
 		asn1write.o base64.o	bignum.o		\
-		blowfish.o	camellia.o					\
+		blowfish.o	camellia.o			\
 		certs.o		cipher.o	cipher_wrap.o	\
-		ctr_drbg.o	debug.o		des.o			\
-		dhm.o		ecdh.o		ecdsa.o			\
-		ecp.o		ecp_curves.o				\
-		entropy.o	entropy_poll.o				\
-		error.o		gcm.o		havege.o		\
-		md.o		md_wrap.o	md2.o			\
-		md4.o		md5.o		memory.o		\
+		ctr_drbg.o	debug.o		des.o		\
+		dhm.o		ecdh.o		ecdsa.o		\
+		ecp.o		ecp_curves.o			\
+		entropy.o	entropy_poll.o			\
+		error.o		gcm.o		havege.o	\
+		md.o		md_wrap.o	md2.o		\
+		md4.o		md5.o		memory.o	\
 		memory_buffer_alloc.o	net.o			\
-		oid.o									\
-		padlock.o	pbkdf2.o	pem.o			\
-		pkcs5.o		pkcs11.o	pkcs12.o		\
-		pk.o		pk_wrap.o	pkparse.o		\
-		pkwrite.o	ripemd160.o					\
-		rsa.o		sha1.o		sha256.o		\
-		sha512.o	ssl_cache.o	ssl_cli.o		\
+		oid.o						\
+		padlock.o	pbkdf2.o	pem.o		\
+		pkcs5.o		pkcs11.o	pkcs12.o	\
+		pk.o		pk_wrap.o	pkparse.o	\
+		pkwrite.o	ripemd160.o			\
+		rsa.o		sha1.o		sha256.o	\
+		sha512.o	ssl_cache.o	ssl_cli.o	\
 		ssl_srv.o   ssl_ciphersuites.o			\
-		ssl_tls.o	threading.o	timing.o		\
-		version.o								\
-		x509.o		x509_create.o				\
-		x509_crl.o	x509_crt.o	x509_csr.o		\
+		ssl_tls.o	threading.o	timing.o	\
+		version.o					\
+		x509.o		x509_create.o			\
+		x509_crl.o	x509_crt.o	x509_csr.o	\
 		x509write_crt.o			x509write_csr.o	\
 		xtea.o
 
