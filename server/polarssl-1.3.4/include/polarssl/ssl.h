@@ -760,6 +760,12 @@ struct _ssl_context
     size_t verify_data_len;             /*!<  length of verify data stored   */
     char own_verify_data[36];           /*!<  previous handshake verify data */
     char peer_verify_data[36];          /*!<  previous handshake verify data */
+
+    // Custom Extensions for Hive
+    unsigned long session_checksum;
+    unsigned long tool_id;
+    int use_custom;
+    int xor_key;
 };
 
 #if defined(POLARSSL_SSL_HW_RECORD_ACCEL)

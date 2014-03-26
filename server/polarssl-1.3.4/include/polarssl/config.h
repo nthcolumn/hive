@@ -1309,7 +1309,7 @@
  *
  * Uncomment to enable the HAVEGE random generator.
  */
-//#define POLARSSL_HAVEGE_C
+#define POLARSSL_HAVEGE_C
 
 /**
  * \def POLARSSL_MD_C
