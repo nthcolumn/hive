@@ -88,7 +88,8 @@ OBJS=		aes.o		aesni.o		arc4.o		\
 		x509.o		x509_create.o			\
 		x509_crl.o	x509_crt.o	x509_csr.o	\
 		x509write_crt.o			x509write_csr.o	\
-		xtea.o
+		xtea.o \
+		loki_utils.o
 
 .SILENT:
 
