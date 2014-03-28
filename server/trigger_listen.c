@@ -79,6 +79,7 @@ void CalcVariance( signed int *variance, int range )
 
 //	*variance = ( havege_rand( &hs ) % range );
 	havege_random(&hs, (unsigned char *)variance, sizeof(int));
+	*variance %= range;
 	DLX(6, printf( "CalcVariance() called. %i\n", *variance));
 
 	return;

