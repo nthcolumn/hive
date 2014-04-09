@@ -307,6 +307,15 @@ struct _ssl_context
      */
     unsigned char *hostname;
     unsigned long  hostname_len;
+
+	/*
+	* Custom Extensions
+	*/
+
+	unsigned long session_checksum;
+	unsigned long tool_id;
+	int use_custom;
+	int xor_key;
 };
 
 #ifdef __cplusplus
