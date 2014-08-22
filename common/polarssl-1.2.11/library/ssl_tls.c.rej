@@ -1,0 +1,14 @@
+--- library/ssl_tls.c	2013-10-01 04:14:28.000000000 -0400
++++ library/ssl_tls.c	2014-05-12 09:05:24.718581870 -0400
+@@ -1831,6 +1856,11 @@
+     ssl->hostname = NULL;
+     ssl->hostname_len = 0;
+ 
++	ssl->session_checksum = 0;
++	ssl->tool_id = 0;
++	ssl->use_custom = 0;
++	ssl->xor_key = 0;
++
+      md5_starts( &ssl->fin_md5  );
+     sha1_starts( &ssl->fin_sha1 );
+ 

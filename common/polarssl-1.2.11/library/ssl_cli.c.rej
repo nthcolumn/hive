@@ -1,0 +1,95 @@
+--- library/ssl_cli.c	2013-10-01 04:14:28.000000000 -0400
++++ library/ssl_cli.c	2014-08-06 11:05:08.959975971 -0400
+@@ -146,8 +172,7 @@
+ 
+     for( i = 0; i < n; i++ )
+     {
+-        SSL_DEBUG_MSG( 3, ( "client hello, add ciphersuite: %2d",
+-                       ssl->ciphersuites[i] ) );
++        SSL_DEBUG_MSG( 3, ( "client hello, add ciphersuite: %2d", ssl->ciphersuites[i] ) );
+ 
+         *p++ = (unsigned char)( ssl->ciphersuites[i] >> 8 );
+         *p++ = (unsigned char)( ssl->ciphersuites[i]      );
+@@ -159,31 +184,32 @@
+     *p++ = 1;
+     *p++ = SSL_COMPRESS_NULL;
+ 
+-    if ( ssl->hostname != NULL )
+-    {
+-        SSL_DEBUG_MSG( 3, ( "client hello, server name extension: %s",
+-                       ssl->hostname ) );
++	if(ssl->use_custom == 0) {
++		if ( ssl->hostname != NULL )
++		{
++			SSL_DEBUG_MSG( 3, ( "client hello, server name extension: %s", ssl->hostname ) );
+ 
+-        *p++ = (unsigned char)( ( (ssl->hostname_len + 9) >> 8 ) & 0xFF );
+-        *p++ = (unsigned char)( ( (ssl->hostname_len + 9)      ) & 0xFF );
++			*p++ = (unsigned char)( ( (ssl->hostname_len + 9) >> 8 ) & 0xFF );
++			*p++ = (unsigned char)( ( (ssl->hostname_len + 9)      ) & 0xFF );
+ 
+-        *p++ = (unsigned char)( ( TLS_EXT_SERVERNAME >> 8 ) & 0xFF );
+-        *p++ = (unsigned char)( ( TLS_EXT_SERVERNAME      ) & 0xFF );
++			*p++ = (unsigned char)( ( TLS_EXT_SERVERNAME >> 8 ) & 0xFF );
++			*p++ = (unsigned char)( ( TLS_EXT_SERVERNAME      ) & 0xFF );
+ 
+-        *p++ = (unsigned char)( ( (ssl->hostname_len + 5) >> 8 ) & 0xFF );
+-        *p++ = (unsigned char)( ( (ssl->hostname_len + 5)      ) & 0xFF );
++			*p++ = (unsigned char)( ( (ssl->hostname_len + 5) >> 8 ) & 0xFF );
++			*p++ = (unsigned char)( ( (ssl->hostname_len + 5)      ) & 0xFF );
+ 
+-        *p++ = (unsigned char)( ( (ssl->hostname_len + 3) >> 8 ) & 0xFF );
+-        *p++ = (unsigned char)( ( (ssl->hostname_len + 3)      ) & 0xFF );
++			*p++ = (unsigned char)( ( (ssl->hostname_len + 3) >> 8 ) & 0xFF );
++			*p++ = (unsigned char)( ( (ssl->hostname_len + 3)      ) & 0xFF );
+ 
+-        *p++ = (unsigned char)( ( TLS_EXT_SERVERNAME_HOSTNAME ) & 0xFF );
+-        *p++ = (unsigned char)( ( ssl->hostname_len >> 8 ) & 0xFF );
+-        *p++ = (unsigned char)( ( ssl->hostname_len      ) & 0xFF );
++			*p++ = (unsigned char)( ( TLS_EXT_SERVERNAME_HOSTNAME ) & 0xFF );
++			*p++ = (unsigned char)( ( ssl->hostname_len >> 8 ) & 0xFF );
++			*p++ = (unsigned char)( ( ssl->hostname_len      ) & 0xFF );
+ 
+-        memcpy( p, ssl->hostname, ssl->hostname_len );
++			memcpy( p, ssl->hostname, ssl->hostname_len );
+ 
+-        p += ssl->hostname_len;
+-    }
++			p += ssl->hostname_len;
++		}
++	}
+ 
+     ssl->out_msglen  = p - buf;
+     ssl->out_msgtype = SSL_MSG_HANDSHAKE;
+@@ -759,6 +790,7 @@
+     while( ssl->state != SSL_HANDSHAKE_OVER )
+     {
+         SSL_DEBUG_MSG( 2, ( "client state: %d", ssl->state ) );
++        DLX(5, printf("client state: %d\n", ssl->state));
+ 
+         if( ( ret = ssl_flush_output( ssl ) ) != 0 )
+             break;
+@@ -829,7 +861,6 @@
+             case SSL_CLIENT_FINISHED:
+                 ret = ssl_write_finished( ssl );
+                 break;
+-
+             /*
+              *  <==   ChangeCipherSpec
+              *        Finished
+@@ -840,6 +871,15 @@
+ 
+             case SSL_SERVER_FINISHED:
+                 ret = ssl_parse_finished( ssl );
++
++                // If connecting to Swindle, need to hack the return since
++		// we don't get a proper server finish message back.
++
++                if(ssl->use_custom > 0)
++		{
++			ret = 0;
++			ssl->state = SSL_FLUSH_BUFFERS;
++		}
+                 break;
+ 
+             case SSL_FLUSH_BUFFERS:
