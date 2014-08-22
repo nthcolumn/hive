@@ -1,0 +1,4 @@
+Changes incorporated into the previous versions of PolarSSL necessary for communicating with the Blot Proxy were made to the PolarSSL-1.2.11 library. However, from version 1.1 to version 1.2 the PolarSSL APIs have changed and modifications are neccesary in crypto.c to make them work. For example, the session caching mechanism has been changed and some functions used in crypto.c (e.g. ssl_set_scb()) have been removed. Consequently, significant work will be needed in crypto.c.
+
+For more information, reference the PolarSSL-1.2.0 release notes found at
+	https://polarssl.org/tech-updates/releases/polarssl-1.2.0-released
