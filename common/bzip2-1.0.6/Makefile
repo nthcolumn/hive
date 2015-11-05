@@ -57,12 +57,8 @@ ifdef TARGET
     include ../Makefile-include.mikrotik-ppc
   else ifeq ("$(TARGET)", "ubiquiti-mips")
     include ../Makefile-include.ubiquiti-mips
-  else ifeq ("$(TARGET)", "avtech-armv5")
-    include ../Makefile-include.avtech-armv5
-  else ifeq ("$(TARGET)", "avtech-armv7")
-    include ../Makefile-include.avtech-armv7
-  else ifeq ("$(TARGET)", "arm")
-    include ../Makefile-include.arm
+  else ifeq ("$(TARGET)", "avtech-arm")
+    include ../Makefile-include.avtech-arm
   else ifeq ("$(TARGET)", "solaris-sparc")
     include ../Makefile-include.solaris-sparc
   else ifeq ("$(TARGET)", "solaris-x86")
@@ -77,12 +73,6 @@ ifdef TARGET
   $(info CFLAGS: $(CFLAGS))
   $(info =========================================================================)
   $(info )
-endif
-
-ifdef DEBUG
-  CFLAGS += -g -DDEBUG -O0
-else
-  CFLAGS += -Os
 endif
 
 ##########################################################################

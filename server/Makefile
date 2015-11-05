@@ -76,11 +76,8 @@ mikrotik-ppc:
 ubiquiti-mips:
 	@make -f Makefile.arch TARGET=ubiquiti-mips
 
-avtech-armv5:
-	@make -f Makefile.arch TARGET=avtech-armv5
-
-avtech-armv7:
-	@make -f Makefile.arch TARGET=avtech-armv7
+avtech-arm:
+	@make -f Makefile.arch TARGET=avtech-arm
 
 strings:
 	rm -f proj_strings.h
