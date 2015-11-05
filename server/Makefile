@@ -5,6 +5,8 @@
 #  
 #  Existing Makefiles include:
 #
+#	Makefile.avtech-arm5
+#	Makefile.avtech-arm7
 #	Makefile.linux-x86
 #	Makefile.solaris-x86
 #	Makefile.mikrotik-x86
@@ -40,7 +42,8 @@ all:
 #	printf "\tmake mikrotik-mipsel\n"
 	printf "\tmake mikrotik-ppc\n"
 	printf "\tmake ubiquiti-mips\n"
-	printf "\tmake avtech-arm\n\n"
+	printf "\tmake avtech-armv5\n"
+	printf "\tmake avtech-armv7\n\n"
 	printf "To build a debug version use:\n"
 	printf "\t make DEBUG=1 <target>\t\tFor symbols only\n"
 	printf "\t make DEBUG=2 <target>\t\tHive debug code\n"
@@ -73,8 +76,11 @@ mikrotik-ppc:
 ubiquiti-mips:
 	@make -f Makefile.arch TARGET=ubiquiti-mips
 
-avtech-arm:
-	@make -f Makefile.arch TARGET=avtech-arm
+avtech-armv5:
+	@make -f Makefile.arch TARGET=avtech-armv5
+
+avtech-armv7:
+	@make -f Makefile.arch TARGET=avtech-armv7
 
 strings:
 	rm -f proj_strings.h
