@@ -43,8 +43,10 @@ else ifeq ("$(TARGET)", "mikrotik-ppc")
   include $(COMMON)/Makefile-include.mikrotik-ppc
 else ifeq ("$(TARGET)", "ubiquiti-mips")
   include $(COMMON)/Makefile-include.ubiquiti-mips
-else ifeq ("$(TARGET)", "avtech-arm")
-  include $(COMMON)/Makefile-include.avtech-arm
+else ifeq ("$(TARGET)", "avtech-armv5")
+  include $(COMMON)/Makefile-include.avtech-armv5
+else ifeq ("$(TARGET)", "avtech-armv7")
+  include $(COMMON)/Makefile-include.avtech-armv7
 #else ifeq ("$(TARGET)", "solaris-x86")
 #  include $(COMMON)/Makefile-include.solaris-x86
 endif
