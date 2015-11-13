@@ -19,6 +19,7 @@ LIBSSL = $(SSL)/libpolarssl.a
 LIBBZIP2 = $(BZIP2)/libbz2.a
 LIBCRYPTO = $(CRYPTO)/libcrypto.a
 LIBDEBUG = $(COMMON)/debug/libdebug.a
+#LIBPATHS = -L$(BZIP2) -L$(STRINGS) -L$(SSL) -L$(CRYPTO) -L$(DEBUG)
 
 INCLUDES = -I. -I$(BZIP2) -I$(CRYPTO) -I$(BZIP2) -I$(COMMON)/ssl/include -I$(COMMON)/debug
 
@@ -74,7 +75,7 @@ IFC = ifconfig.c
 
 OS = $(shell uname)
 
-$(info )
+$(info ) 
 $(info )
 $(info =========================================================================)
 ifdef ARCH_BUILD_SERVER
@@ -144,7 +145,7 @@ $(info =========================================================================
 $(info .  TARGET: $(TARGET))
 $(info .  SRCDIR: $(PWD))
 $(info .      CC: $(CC))
-$(info .  CFLAGS: $(CFLAGS))
+$(info .  CFLAGS: $(CFLAGS)) 
 $(info . LDFLAGS: $(LDFLAGS))
 $(info =========================================================================)
 $(info )
@@ -173,14 +174,14 @@ release: $(SERVER)
 $(SERVER): $(SERVER_REBUILD) $(LIBCRYPTO) proj_strings.h $(OBJS) $(LIBSSL) $(LIBBZIP2) $(STRINGS)/string_utils.o $(LIBDEBUG)
 	if ! test $(DEBUG); then \
 		printf "\tLD\t\t$@\n"; \
-		$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) $(STRINGS)/string_utils.o $(LIBS) -o $@; \
-		printf "\tStripping\t$@\n"; \
-		$(STRIP) $(BINARY)/$(SERVER); \
+		$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) $(STRINGS)/string_utils.o -o $@ && \
+		printf "\tStripping\t$@\n" && \
+		$(STRIP) $(BINARY)/$(SERVER) && \
 		$(MD5SUM) $(BINARY)/$(SERVER) > $(BINARY)/$(SERVER).md5; \
 	else \
 		printf "\n\tCREATING DEBUG LEVEL $(DEBUG) VERSION OF $@\n\n"; \
 		printf "\tLD\t\t$@-dbg\n"; \
-		$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) $(STRINGS)/string_utils.o $(LIBS) -o $@-dbg; \
+		$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) $(STRINGS)/string_utils.o -o $@-dbg && \
 		$(MD5SUM) $(BINARY)/$(SERVER)-dbg > $(BINARY)/$(SERVER)-dbg.md5; \
 	fi
 	echo "ARCH_BUILD_SERVER=$(TARGET)" > ARCH_BUILD
