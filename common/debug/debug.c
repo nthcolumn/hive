@@ -3,6 +3,8 @@
  *
  */
 #include "debug.h"
+#include <stddef.h>
+#include <stdio.h>
 
 void debug_print_buffer(const unsigned char *buf, const size_t len)
 {
